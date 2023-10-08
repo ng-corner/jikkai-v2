@@ -13,8 +13,8 @@ const routes: RouteRecordRaw[] = [
   },
   {
     name: 'Расписание',
-    path: '/',
-    component: () => import('@/views/Home.vue')
+    path: '/Calendar',
+    component: () => import('@/views/Calendar.vue')
   },
   {
     name: 'Рандом',
