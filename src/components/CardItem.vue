@@ -1,6 +1,6 @@
 <template>
-  <div class="item-block">
-    <div v-for="item in anime">
+  <n-grid :cols="5" class="item-block">
+    <n-gi v-for="item in anime">
       <div
         class="item"
         :style="{ backgroundImage: `url(${item.images.jpg.image_url})` }"
@@ -9,13 +9,13 @@
       <p class="episodes">
         Эпизоды: {{ item.episodes ? item.episodes : "не вышло" }}
       </p>
-    </div>
-  </div>
+    </n-gi>
+  </n-grid>
 </template>
 
 <script setup>
 import { defineProps } from "vue";
-const props = defineProps({
+defineProps({
   anime: {
     type: Object,
     required: true,
@@ -50,5 +50,8 @@ function truncateText(text) {
 }
 .episodes {
   color: #7f7f7f;
+}
+.n-gi {
+  overflow: hidden;
 }
 </style>
