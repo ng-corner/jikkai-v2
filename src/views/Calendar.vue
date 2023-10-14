@@ -1,42 +1,39 @@
 <template>
   <div class="container">
     <div class="calendar">
-      <div class="">
+      <div class="calendar-radio">
         <n-space vertical>
-          <n-radio-group
-            v-model:value="value"
-            name="radiobuttongroup3"
-            size="large"
-          >
-            <n-radio-button
-              @click="Calendar(song.value)"
-              v-for="song in songs"
-              :key="song.value"
-              :value="song.value"
-            >
-              {{ song.label }}
+          <n-radio-group v-model:value="currentDay" size="large">
+            <n-radio-button @click="getAnimeFromSchedules(day.value)" v-for="day in daysPerWeek" :key="day.value"
+              :value="day.value">
+              {{ day.label }}
             </n-radio-button>
           </n-radio-group>
         </n-space>
       </div>
-      <CardItem :anime="animes" />
+      <CardItem :anime-list="animePerDay" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import CardItem from "../components/CardItem.vue";
+import { ref, onMounted } from "vue";
+import CardItem from "@/components/CardItem.vue";
+import { getAnimeByPath } from '@/shared/api'
+import { Anime } from "@/shared/types";
 
-const value = ref();
-const animes = ref([]);
-const songs = ref([
+onMounted(() => {
+  getAnimeFromSchedules(currentDay.value);
+});
+
+const animePerDay = ref<Anime[]>([]);
+const daysPerWeek = ref([
   {
-    label: "понедельник ",
+    label: "понедельник",
     value: "Monday",
   },
   {
-    label: "вторник ",
+    label: "вторник",
     value: "Tuesday",
   },
   {
@@ -60,13 +57,15 @@ const songs = ref([
     value: "Sunday",
   },
 ]);
+const currentDay = ref(daysPerWeek.value[0].value);
 
-const Calendar = async (day: string = "Monday") => {
-  animes.value = await fetch(`https://api.jikan.moe/v4/schedules?filter=${day}`)
-    .then((data) => data.json())
-    .then((res) => res.data);
-  console.log(animes.value);
-};
+const getAnimeFromSchedules = async (day: string) => {
+  const response = await getAnimeByPath("schedules", {
+    params: { filter: day }
+  })
+
+  animePerDay.value = response.data;
+}
 </script>
 
 <style lang="scss" scoped>
@@ -75,7 +74,13 @@ const Calendar = async (day: string = "Monday") => {
   max-width: 1050px;
   margin: 0 auto;
 }
+
 .calendar {
   max-width: 900px;
+
+  &-radio {
+    text-transform: capitalize;
+    margin-bottom: 20px;
+  }
 }
 </style>

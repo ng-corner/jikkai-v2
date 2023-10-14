@@ -7,10 +7,10 @@
       <n-gi span="2">
         <n-space size="medium" align="center" class="nav" justify="space-around">
           <template v-for="route in router.options.routes" :key="route.path">
-            <router-link to="/" custom>
-              <n-a :href="route.path">
-                {{ route.name }}
-              </n-a>
+            <router-link :to="route.path">
+              <!-- <n-a :href="route.path"> -->
+              {{ route.name }}
+              <!-- </n-a> -->
             </router-link>
           </template>
         </n-space>

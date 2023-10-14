@@ -1,57 +1,51 @@
 <template>
-  <n-grid :cols="5" class="item-block">
-    <n-gi v-for="item in anime">
-      <div
-        class="item"
-        :style="{ backgroundImage: `url(${item.images.jpg.image_url})` }"
-      ></div>
-      <p class="anime-title">{{ truncateText(item.title) }}</p>
-      <p class="episodes">
-        Эпизоды: {{ item.episodes ? item.episodes : "не вышло" }}
-      </p>
-    </n-gi>
-  </n-grid>
+  <n-space>
+    <div class="item" v-for="anime in  animeList " :key="anime.mal_id">
+      <n-grid :cols="1" class="item-grid">
+        <n-gi>
+          <n-image object-fit='cover' :src="anime.images.jpg.image_url" width="150" height="200" />
+        </n-gi>
+        <n-gi>
+          <n-p class="item-title">
+            {{ anime.title }}
+          </n-p>
+        </n-gi>
+        <n-gi>
+          <n-p class="item-episodes">
+            Эпизоды: {{ anime.episodes ?? "не вышло" }}
+          </n-p>
+        </n-gi>
+      </n-grid>
+    </div>
+  </n-space>
 </template>
 
-<script setup>
-import { defineProps } from "vue";
-defineProps({
-  anime: {
-    type: Object,
-    required: true,
-    default: () => {},
-  },
-});
-function truncateText(text) {
-  if (text.length > 15) {
-    return text.slice(0, 15) + "...";
-  }
-  return text;
-}
+<script setup lang="ts">
+import type { Anime } from '@/shared/types'
+
+defineProps<{ animeList: Anime[] }>()
 </script>
 
 <style lang="scss" scoped>
-.item-block {
-  display: flex;
-  flex-wrap: wrap;
-}
 .item {
-  border-radius: 10px;
-  margin: 10px;
-  background-color: red;
-  width: 150px;
-  height: 200px;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-.anime-title {
-  max-width: 150px;
-  font-weight: bold;
-}
-.episodes {
-  color: #7f7f7f;
-}
-.n-gi {
-  overflow: hidden;
+  height: 100%;
+  margin: 0;
+
+  &-grid {
+    height: 100%;
+  }
+
+  &-title {
+    height: 100%;
+    max-width: 150px;
+    font-weight: bold;
+  }
+
+  &-episodes {
+    color: #7f7f7f;
+    // FIX
+    height: 100%;
+    vertical-align: bottom;
+  }
 }
 </style>
